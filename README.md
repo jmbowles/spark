@@ -1,4 +1,4 @@
-# Apache Spark - Implementation of Concepts
+<b># Apache Spark - Implementation of Concepts</b>
 
 General Structured Streaming</br>
 Reading/writing files in Parquet format</br>
