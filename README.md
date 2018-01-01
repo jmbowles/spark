@@ -1,6 +1,6 @@
 # Apache Spark - Implementation of Concepts
 
-General Structured Streaming
+General Structured Streaming</br>
 Reading/writing files in Parquet format
 Structured streaming word count from Kafka topic
 Structured streaming word count from TCP socket
