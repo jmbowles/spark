@@ -14,6 +14,11 @@ spark-submit --packages JohnSnowLabs:spark-nlp:1.2.3 spark_nlp.py
 pyspark --packages JohnSnowLabs:spark-nlp:1.2.3 
 execfile('sentiment_nlp.py')
 
+https://github.com/JohnSnowLabs/spark-nlp/blob/master/python/example/vivekn-sentiment/sentiment.ipynb
+spark-submit --packages JohnSnowLabs:spark-nlp:1.2.3 --driver-memory 10g sentiment_nlp.py 
+pyspark --packages JohnSnowLabs:spark-nlp:1.2.3 --driver-memory 10g
+http://nlp.johnsnowlabs.com/components.html
+
 '''
 
 spark = SparkSession\
@@ -55,8 +60,8 @@ spell_checker = NorvigSweetingApproach() \
 sentiment_detector = ViveknSentimentApproach() \
     .setInputCols(["spell", "sentence"]) \
     .setOutputCol("sentiment") \
-    .setPositiveSource("positive") \
-    .setNegativeSource("negative") \
+    .setPositiveSource("../datasets/sentiments/pos") \
+    .setNegativeSource("../datasets/sentiments/neg") \
     .setPruneCorpus(False)
 
 finisher = Finisher() \
