@@ -45,12 +45,19 @@ parsed = parsed.withColumn("bytes_sent", F.regexp_extract("value", r"length\s(\d
 cols = ["event_ts", "source_ip", "source_port", "dest_ip", "dest_port", "bytes_sent"]
 parsed = parsed.select(*cols).where(F.expr("trim(source_ip) <> ''"))
 
-query = parsed\
-     .writeStream\
-     .outputMode("append")\
-     .format("console")\
-     .option("truncate", False)\
-     .option("numRows", 250)\
-     .start()
+parsed.writeStream\
+    .outputMode("append")\
+    .format("console")\
+    .option("truncate", False)\
+    .option("numRows", 250)\
+    .start()
+
+parsed.selectExpr("CAST(id AS STRING) AS key", "to_json(struct(*)) AS value")\
+    .writeStream\
+    .format("kafka")\
+    .outputMode("append")\
+    .option("kafka.bootstrap.servers", "192.168.254.11:9092")\
+    .option("topic", "tcp_connections")\
+    .start()
 
 spark.streams.awaitAnyTermination()
