@@ -1,0 +1,46 @@
+{
+  "type": "kafka",
+  "dataSchema": {
+    "dataSource": "tcp_connections",
+    "parser": {
+      "type": "string",
+      "parseSpec": {
+        "format": "json",
+        "timestampSpec": {
+          "column": "event_ts",
+          "format": "auto"
+        },
+        "dimensionsSpec": {
+          "dimensions": [
+            {"name": "source_ip", "type": "string"},
+            {"name": "dest_ip", "type": "string"},
+            {"name": "dest_port", "type": "string"}
+          ]
+        }
+      }
+    },
+    "metricsSpec" : [
+      { "type" : "count", "name" : "count" },
+      { "type" : "longSum", "name" : "bytes_sent", "fieldName" : "bytes_sent" }
+    ],
+    "granularitySpec": {
+      "type": "uniform",
+      "segmentGranularity": "DAY",
+      "queryGranularity": "HOUR",
+      "rollup": true
+    }
+  },
+  "tuningConfig": {
+    "type": "kafka",
+    "reportParseExceptions": false
+  },
+  "ioConfig": {
+    "topic": "tcp_connections",
+    "replicas": 2,
+    "taskDuration": "PT10M",
+    "completionTimeout": "PT20M",
+    "consumerProperties": {
+      "bootstrap.servers": "localhost:9092"
+    }
+  }
+}
