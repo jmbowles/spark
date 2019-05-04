@@ -1,0 +1,47 @@
+{
+  "type": "kafka",
+  "dataSchema": {
+    "dataSource": "tcp_connections_unique_destip_thetasketch",
+    "parser": {
+      "type": "string",
+      "parseSpec": {
+        "format": "json",
+        "timestampSpec": {
+          "column": "event_ts",
+          "format": "auto"
+        },
+        "dimensionsSpec": {
+          "dimensions": [
+            {"name": "dest_port", "type": "string"}
+          ]
+        }
+      }
+    },
+    "metricsSpec" : [
+      {
+          "type": "thetaSketch",
+          "name": "unique_destinations",
+          "fieldName": "dest_ip"
+      }
+    ],
+    "granularitySpec": {
+      "type": "uniform",
+      "segmentGranularity": "DAY",
+      "queryGranularity": "HOUR",
+      "rollup": true
+    }
+  },
+  "tuningConfig": {
+    "type": "kafka",
+    "reportParseExceptions": true
+  },
+  "ioConfig": {
+    "topic": "tcp_connections",
+    "replicas": 2,
+    "taskDuration": "PT10M",
+    "completionTimeout": "PT20M",
+    "consumerProperties": {
+      "bootstrap.servers": "localhost:9092"
+    }
+  }
+}

@@ -1,5 +1,6 @@
 """
- 
+https://cleanprogrammer.net/druid-count-unique-using-datasketches-theta-sketch/
+
 sudo tcpdump -n -tttt -s 0 -i en1 'tcp port 443 and (((ip[2:2] - ((ip[0]&0xf)<<2)) - ((tcp[12]&0xf0)>>2)) != 0) and dst not 192.168.254.11'
 sudo tcpdump -n -tttt -s 0 -i en1 'tcp and (((ip[2:2] - ((ip[0]&0xf)<<2)) - ((tcp[12]&0xf0)>>2)) != 0) and dst not 192.168.254.11' | nc -lk 9999
 
@@ -13,9 +14,15 @@ Console:      http://localhost:8081/#/datasources/tcp_connections
 Overlord:     http://localhost:8090/console.html
 
 Druid Kafka Ingestion:
-Submittal:  curl -XPOST -H'Content-Type: application/json' -d @tcpdump-kafka-supervisor.json http://localhost:8090/druid/indexer/v1/supervisor
-Status:     curl -XGET http://localhost:8090/druid/indexer/v1/supervisor/tcp_connections/status | python -m json.tool
-            curl -XGET http://localhost:8090/druid/indexer/v1/supervisor/tcp_connections_by_port_minute/status | python -m json.tool
+Submit and Update Spec: 
+    curl -XPOST -H'Content-Type: application/json' -d @tcpdump-kafka-supervisor.json http://localhost:8090/druid/indexer/v1/supervisor
+    curl -XPOST -H'Content-Type: application/json' -d @tcpdump-by-dest-port-minute-kafka-supervisor.json http://localhost:8090/druid/indexer/v1/supervisor
+    curl -XPOST -H'Content-Type: application/json' -d @tcpdump-unique-destip-by-port-hour-thetasketch-kafka-supervisor.json http://localhost:8090/druid/indexer/v1/supervisor
+Status:                 
+    curl -XGET http://localhost:8090/druid/indexer/v1/supervisor/tcp_connections/status | python -m json.tool
+    curl -XGET http://localhost:8090/druid/indexer/v1/supervisor/tcp_connections_by_port_minute/status | python -m json.tool
+    curl -XGET http://localhost:8090/druid/indexer/v1/supervisor/tcp_connections_by_port_minute/stats | python -m json.tool
+    curl -XGET http://localhost:8090/druid/indexer/v1/supervisor/tcp_connections_unique_destip_thetasketch/stats | python -m json.tool
 
 Kafka:
 
