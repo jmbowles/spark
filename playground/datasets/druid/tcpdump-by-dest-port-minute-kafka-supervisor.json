@@ -1,7 +1,7 @@
 {
   "type": "kafka",
   "dataSchema": {
-    "dataSource": "tcp_connections",
+    "dataSource": "tcp_connections_by_port_minute",
     "parser": {
       "type": "string",
       "parseSpec": {
@@ -12,8 +12,6 @@
         },
         "dimensionsSpec": {
           "dimensions": [
-            {"name": "source_ip", "type": "string"},
-            {"name": "dest_ip", "type": "string"},
             {"name": "dest_port", "type": "string"}
           ]
         }
@@ -21,12 +19,22 @@
     },
     "metricsSpec" : [
       { "type" : "count", "name" : "count" },
-      { "type" : "longSum", "name" : "bytes_sent", "fieldName" : "bytes_sent" }
+      { "type" : "longSum", "name" : "bytes_sent", "fieldName" : "bytes_sent" },
+      {
+        "name": "bytes_sent_min",
+        "fieldName": "bytes_sent",
+        "type": "doubleMin"
+      },
+      {
+        "name": "bytes_sent_max",
+        "fieldName": "bytes_sent",
+        "type": "doubleMax"
+      }
     ],
     "granularitySpec": {
       "type": "uniform",
       "segmentGranularity": "DAY",
-      "queryGranularity": "HOUR",
+      "queryGranularity": "MINUTE",
       "rollup": true
     }
   },

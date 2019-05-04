@@ -7,12 +7,15 @@ Druid Process:
 
 bin/supervise -c quickstart/tutorial/conf/tutorial-cluster.conf
 
-Druid Console:
+Druid Consoles:
 
-http://localhost:8081/#/datasources/tcp_connections
+Console:      http://localhost:8081/#/datasources/tcp_connections
+Overlord:     http://localhost:8090/console.html
 
-Druid Kafka Ingestion
-curl -XPOST -H'Content-Type: application/json' -d @quickstart/tutorial/tcpdump-kafka-supervisor.json http://localhost:8090/druid/indexer/v1/supervisor
+Druid Kafka Ingestion:
+Submittal:  curl -XPOST -H'Content-Type: application/json' -d @tcpdump-kafka-supervisor.json http://localhost:8090/druid/indexer/v1/supervisor
+Status:     curl -XGET http://localhost:8090/druid/indexer/v1/supervisor/tcp_connections/status | python -m json.tool
+            curl -XGET http://localhost:8090/druid/indexer/v1/supervisor/tcp_connections_by_port_minute/status | python -m json.tool
 
 Kafka:
 
